@@ -47,8 +47,8 @@ public final class UpperBound
     //
     // ATTRIBUTES
     //
-    private int[][] distances; 
-    private Graph graph;
+    final private int[][] distances; 
+    final private Graph graph;
     private ArrayList[] mst;
     private int[] tour;
     
@@ -80,7 +80,7 @@ public final class UpperBound
             mst = getMinSpanningTree();
         }
         
-        // get Eulerian graph: MST edges UNION matched edges of odd-degree nodes
+        // get Eulerian oddDegreeSubgraph: MST edges UNION matched edges of odd-degree nodes
         List[] eulerGraph = getEulerGraph( mst );
         
         // get Eulerian walk
@@ -95,19 +95,19 @@ public final class UpperBound
     // 
     // PRIVATE METHODS
     //
-    // get Eulerian graph: MST edges UNION matching edges
+    // get Eulerian oddDegreeSubgraph: MST edges UNION matching edges
     private List[] getEulerGraph( ArrayList[] mst )
     {
         // identify the (even # of) vertices in the MST of odd degree
         ArrayList oddDegreeNodes = getOddDegreeNodes( mst );
         
         // construct subgraph from vertices in MST with odd degree.
-        Graph graph = getOddDegreeSubgraph( oddDegreeNodes );
+        Graph oddDegreeSubgraph = getOddDegreeSubgraph( oddDegreeNodes );
         
         // compute minimum cost maximum matching for this subgaph
-        int[] mates = graph.getMinCostMaxMatch();
+        int[] mates = oddDegreeSubgraph.getMinCostMaxMatch();
         
-        // construct empty Eulerian graph
+        // construct empty Eulerian oddDegreeSubgraph
         List[] neighbors = new LinkedList[ mst.length ];
         for ( int i = 0; i < neighbors.length; i++ )
         {
@@ -120,8 +120,8 @@ public final class UpperBound
             // add MST edges to node u
             for ( int j = 0; j < mst[u].size(); j++ )
             {
-                int v = ((Integer) mst[u].get( j )).intValue();
-                neighbors[u].add( new Integer( v ) );
+                int v = ((Integer) mst[u].get( j ));
+                neighbors[u].add( v );
             }
         }
         
@@ -130,13 +130,13 @@ public final class UpperBound
         {
             Integer I = (Integer) oddDegreeNodes.get( i );
             Integer J = (Integer) oddDegreeNodes.get( mates[i] );
-            neighbors[ I.intValue() ].add( J );
+            neighbors[ I ].add( J );
         }
         
         return neighbors;
     }
         
-    // construct Eulerian circuit on Eulerian graph
+    // construct Eulerian circuit on Eulerian oddDegreeSubgraph
     private int[] getEulerTour( List eulerWalk )
     {        
         int[] tour = new int[ distances.length ];
@@ -150,7 +150,7 @@ public final class UpperBound
         int index = 0;
         for ( ListIterator iterator = eulerWalk.listIterator(); iterator.hasNext(); )
         {
-            int v = ( (Integer) iterator.next() ).intValue();
+            int v = ( (Integer) iterator.next() );
             if ( ! isInTour[v] )
             {
                 isInTour[v] = true;
@@ -167,7 +167,7 @@ public final class UpperBound
     private List getEulerWalk( List[] eulerGraph, int v1 )
     {
         List skeleton = new LinkedList();        
-        skeleton.add( new Integer( v1 ) );
+        skeleton.add( v1 );
         
         if ( eulerGraph[ v1 ].isEmpty() )
         {
@@ -185,7 +185,7 @@ public final class UpperBound
             iterator.remove();
             
             // remove edge from node v
-            int v = V.intValue();
+            int v = V;
             eulerGraph[v].remove( new Integer( u ) );
             
             skeleton.add( V );
@@ -201,11 +201,11 @@ public final class UpperBound
         List walk = new LinkedList();
         for ( ListIterator iterator = skeleton.listIterator(); iterator.hasNext(); )
         {
-            int v = ((Integer) iterator.next()).intValue();
+            int v = ((Integer) iterator.next());
             List subwalk = getEulerWalk( eulerGraph, v );
             walk.addAll( subwalk );
         }
-        walk.add( new Integer( v1 ) );
+        walk.add( v1 );
             
         return walk; // return List of recursive call values     
     }
@@ -254,8 +254,8 @@ public final class UpperBound
                 nComponents--;
                 
                 // add edge to tree
-                tree[ u ].add( new Integer( v ) );
-                tree[ v ].add( new Integer( u ) );                
+                tree[ u ].add( v );
+                tree[ v ].add( u );                
             }
         }
         
@@ -269,7 +269,7 @@ public final class UpperBound
         {
             if ( mst[i].size() % 2 == 1 )
             {
-                oddDegreeNodes.add( new Integer( i ) );
+                oddDegreeNodes.add( i );
             }            
         }
         return oddDegreeNodes;
@@ -294,7 +294,7 @@ public final class UpperBound
             for ( int j = 0; j < i; j++ )
             {                
                 Integer J = (Integer) oddDegreeNodes.get( j );
-                costs[i][j] = costs[j][i] = distances[ I.intValue() ][ J.intValue() ];
+                costs[i][j] = costs[j][i] = distances[ I ][ J ];
             }
         }
 
