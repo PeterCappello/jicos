@@ -111,7 +111,7 @@ public final class UpperBound
         List<Integer>[] neighbors = new LinkedList[ mst.length ];
         for ( int i = 0; i < neighbors.length; i++ )
         {
-            neighbors[i] = new LinkedList<>();
+            neighbors[i] = new LinkedList< >();
         }
         
         // add minimum spanning tree edges
