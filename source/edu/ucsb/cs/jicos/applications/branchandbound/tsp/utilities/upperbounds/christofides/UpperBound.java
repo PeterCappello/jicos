@@ -96,10 +96,10 @@ public final class UpperBound
     // PRIVATE METHODS
     //
     // get Eulerian oddDegreeSubgraph: MST edges UNION matching edges
-    private List[] getEulerGraph( ArrayList[] mst )
+    private List[] getEulerGraph( ArrayList<Integer>[] mst )
     {
         // identify the (even # of) vertices in the MST of odd degree
-        ArrayList oddDegreeNodes = getOddDegreeNodes( mst );
+        ArrayList<Integer> oddDegreeNodes = getOddDegreeNodes( mst );
         
         // construct subgraph from vertices in MST with odd degree.
         Graph oddDegreeSubgraph = getOddDegreeSubgraph( oddDegreeNodes );
@@ -108,10 +108,10 @@ public final class UpperBound
         int[] mates = oddDegreeSubgraph.getMinCostMaxMatch();
         
         // construct empty Eulerian oddDegreeSubgraph
-        List[] neighbors = new LinkedList[ mst.length ];
+        List<Integer>[] neighbors = new LinkedList[ mst.length ];
         for ( int i = 0; i < neighbors.length; i++ )
         {
-            neighbors[i] = new LinkedList();
+            neighbors[i] = new LinkedList<>();
         }
         
         // add minimum spanning tree edges
@@ -120,7 +120,7 @@ public final class UpperBound
             // add MST edges to node u
             for ( int j = 0; j < mst[u].size(); j++ )
             {
-                int v = ((Integer) mst[u].get( j ));
+                int v = mst[u].get( j );
                 neighbors[u].add( v );
             }
         }
